@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+require 'optparse'
+require 'digest/md5'
+
+Signal.trap(:INT) { exit(1) }
+
+Version = 'v0.1.0'
+Release = '2016-02-09'
+
+params = ARGV
+option = {:interval => 1, :before_clear => false}
+
+OptionParser.new do |opt|
+  opt.banner = "使用法: #{opt.program_name} [オプション] <ターゲット> <コマンド>"
+  opt.on('-c', '--before-clear', 'コマンド実行前に画面をクリア') {|bool| option[:before_clear] = bool }
+  opt.on('-h', '--help', 'この使い方を表示して終了') { puts opt.help; exit }
+  opt.on('-v', '--version', 'バージョン情報を表示して終了') { puts opt.ver; exit }
+  opt.separator('')
+  opt.on_tail <<~EOS
+    使用例:
+    #{opt.summary_indent}$ #{opt.program_name} ./script.rb 'ruby ./script.rb'
+  EOS
+  opt.parse!(params) rescue (warn($!.message); exit(1))
+end
+
+unless params.size == 2
+  warn "#{File.basename(__FILE__)}: 引数が足りません"
+  exit(1)
+end
+
+target, command = params
+last_status = nil
+define_method(:current_status) { Digest::MD5.file(target) }.tap {|proc| last_status = method(proc).call }
+define_method(:target_update?) { (current_status != last_status).tap { last_status = current_status } }
+
+define_method(:execute_command) do
+  # clear screen if `before_cls' is true
+  puts "\e[H\e[2J" if option[:before_clear]
+
+  # execute command
+  puts "[#{Time.now}] Target was update!"
+  system(command)
+  puts
+end
+
+puts "[#{Time.now}] Handle start: #{target}"
+loop do
+  sleep(option[:interval])
+  execute_command if target_update?
+end
