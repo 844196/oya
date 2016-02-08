@@ -1,50 +1,45 @@
 #!/usr/bin/env ruby
+
+lib = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
 require 'optparse'
-require 'digest/md5'
+require 'oya'
 
-Signal.trap(:INT) { exit(1) }
-
-Version = 'v0.1.0'
-Release = '2016-02-09'
+Version = Oya::Version
+Release = Oya::Release
 
 params = ARGV
-option = {:interval => 1, :before_clear => false}
+option = {:interval => 1}
 
 OptionParser.new do |opt|
   opt.banner = "使用法: #{opt.program_name} [オプション] <ターゲット> <コマンド>"
-  opt.on('-c', '--before-clear', 'コマンド実行前に画面をクリア') {|bool| option[:before_clear] = bool }
   opt.on('-h', '--help', 'この使い方を表示して終了') { puts opt.help; exit }
   opt.on('-v', '--version', 'バージョン情報を表示して終了') { puts opt.ver; exit }
   opt.separator('')
   opt.on_tail <<~EOS
     使用例:
-    #{opt.summary_indent}$ #{opt.program_name} ./script.rb 'ruby ./script.rb'
+    #{opt.summary_indent}#{opt.program_name} ./script.rb 'ruby ./script.rb'
   EOS
   opt.parse!(params) rescue (warn($!.message); exit(1))
 end
 
-unless params.size == 2
-  warn "#{File.basename(__FILE__)}: 引数が足りません"
-  exit(1)
+target_path, command_str = params.tap do |array|
+  unless array.size == 2
+    warn "#{File.basename(__FILE__)}: 引数が足りません"
+    exit(1)
+  end
 end
 
-target, command = params
-last_status = nil
-define_method(:current_status) { Digest::MD5.file(target) }.tap {|proc| last_status = method(proc).call }
-define_method(:target_update?) { (current_status != last_status).tap { last_status = current_status } }
+handler = Oya::Handler.new do |handle|
+  handle.target       = target_path
+  handle.interval     = option[:interval]
+  handle.startup_msg  = 'Watch start!'
+  handle.shutdown_msg = 'Bye!'
 
-define_method(:execute_command) do
-  # clear screen if `before_cls' is true
-  puts "\e[H\e[2J" if option[:before_clear]
-
-  # execute command
-  puts "[#{Time.now}] Target was update!"
-  system(command)
-  puts
+  handle.add_observer Oya::Observers::ShellNotifier.new('Target update!')
+  handle.add_observer Oya::Observers::DesktopNotifier.new('Target update!')
+  handle.add_observer Oya::Observers::Command.new(command_str)
 end
 
-puts "[#{Time.now}] Handle start: #{target}"
-loop do
-  sleep(option[:interval])
-  execute_command if target_update?
-end
+handler.watch

@@ -3,7 +3,7 @@
 [![Required Ruby](https://img.shields.io/badge/ruby-%3E%3D%202.3.0-red.svg)](#)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-![Gif](https://cloud.githubusercontent.com/assets/4990822/12902385/5d153c8c-cf04-11e5-8cae-abda70408188.gif)
+![Gif](https://cloud.githubusercontent.com/assets/4990822/12924220/59689302-cf9c-11e5-9946-c359107440a0.gif)
 
 ファイルの変更を検知し、任意のコマンドを実行します
 
@@ -31,12 +31,11 @@ YES, I AM!
 ```shellsession
 $ oya --help
 使用法: oya [オプション] <ターゲット> <コマンド>
-    -c, --before-clear               コマンド実行前に画面をクリア
     -h, --help                       この使い方を表示して終了
     -v, --version                    バージョン情報を表示して終了
 
 使用例:
-    $ oya ./script.rb 'ruby ./script.rb'
+    oya ./script.rb 'ruby ./script.rb'
 ```
 
 ## Author
@@ -46,3 +45,4 @@ Masaya Tk (<http://github.com/844196>)
 ## License
 
 MIT
+アイコンは、[いらすとや](http://www.irasutoya.com/)のアイコンを縮小・加工して同梱しています
