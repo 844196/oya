@@ -11,6 +11,13 @@
 
 「親」という字は、親が木の上に立って子どもを見守る云々
 
+## Install
+
+```shellsession
+$ git clone https://github.com/844196/oya && cd oya
+# rake install
+```
+
 ## Usage
 
 ```shellsession
@@ -45,4 +52,5 @@ Masaya Tk (<http://github.com/844196>)
 ## License
 
 MIT
-アイコンは、[いらすとや](http://www.irasutoya.com/)のアイコンを縮小・加工して同梱しています
+
+（アイコンは、[いらすとや](http://www.irasutoya.com/)のアイコンを縮小・加工して同梱しています）
