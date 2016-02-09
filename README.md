@@ -1,7 +1,8 @@
-# Oya
+# ![oya](https://cloud.githubusercontent.com/assets/4990822/12932330/a48e760c-cfc5-11e5-9b79-32532b348a53.png)
 
 [![Required Ruby](https://img.shields.io/badge/ruby-%3E%3D%202.3.0-red.svg)](#)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![GitHub release](https://img.shields.io/github/release/844196/oya.svg)]()
 
 ![Gif](https://cloud.githubusercontent.com/assets/4990822/12924220/59689302-cf9c-11e5-9946-c359107440a0.gif)
 
