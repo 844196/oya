@@ -4,6 +4,7 @@ lib = File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require 'optparse'
+require 'shellwords'
 require 'oya'
 
 Version = Oya::Version
@@ -21,6 +22,13 @@ OptionParser.new do |opt|
     使用例:
     #{opt.summary_indent}#{opt.program_name} ./script.rb 'ruby ./script.rb'
   EOS
+
+  %w(~/.options/oya ./.oya).each do |path|
+    expand_path = File.expand_path(path)
+    if File.exist?(expand_path)
+      params.unshift(*IO.readlines(expand_path).map {|line| Shellwords.split(line.chomp) }.flatten)
+    end
+  end
   opt.parse!(params) rescue (warn($!.message); exit(1))
 end
 

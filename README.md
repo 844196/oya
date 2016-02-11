@@ -46,6 +46,21 @@ $ oya --help
     oya ./script.rb 'ruby ./script.rb'
 ```
 
+また、実行時に以下のファイルの各行をパースし、コマンドライン引数として解釈します:
+
+* ~/.options/oya
+* コマンドを実行したカレントディレクトリ下にある`.oya`
+
+```shellsession
+$ cat <<EOF>.oya
+> ~/text
+> date
+> EOF
+
+$ oya
+[2016-02-11 22:42:11 +0900] Watch start!
+```
+
 ## Author
 
 Masaya Tk (<http://github.com/844196>)
