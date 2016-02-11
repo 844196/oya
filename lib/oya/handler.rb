@@ -10,6 +10,10 @@ class Oya::Handler
     yield self if block_given?
   end
 
+  def self.watch(target='', params={}, &block)
+    new(target, params, &block).watch
+  end
+
   def watch
     Signal.trap(:INT) do
       notify_observers(:message => shutdown_msg, :command => ':')

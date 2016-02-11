@@ -31,15 +31,9 @@ target_path, command_str = params.tap do |array|
   end
 end
 
-handler = Oya::Handler.new do |handle|
-  handle.target       = target_path
-  handle.interval     = option[:interval]
-  handle.startup_msg  = 'Watch start!'
-  handle.shutdown_msg = 'Bye!'
-
+Oya::Handler.watch(target_path) do |handle|
+  handle.interval = option[:interval]
   handle.add_observer Oya::Observers::ShellNotifier.new('Target update!')
   handle.add_observer Oya::Observers::DesktopNotifier.new('Target update!')
   handle.add_observer Oya::Observers::Command.new(command_str)
 end
-
-handler.watch
