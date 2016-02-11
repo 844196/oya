@@ -2,10 +2,12 @@ class Oya::Handler
   include Observable
 
   attr_accessor :target, :interval, :startup_msg, :shutdown_msg
+  @@default_options = {:interval => 1, :startup_msg => 'Watch start!', :shutdown_msg => 'Bye!'}
 
-  def initialize
-    yield(self) if block_given?
-    @last_status  = current_status
+  def initialize(target='', params={}, &block)
+    @target = target
+    @@default_options.merge(params).each {|k,v| send("#{k.to_s}=", v) }
+    yield self if block_given?
   end
 
   def watch
@@ -15,6 +17,7 @@ class Oya::Handler
     end
 
     notify_observers(:message => startup_msg, :command => ':')
+    @last_status  = current_status
     loop do
       sleep interval
       notify_observers(:changed_file => target) if target_changed?
