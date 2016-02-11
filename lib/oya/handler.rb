@@ -5,7 +5,7 @@ class Oya::Handler
   @@default_options = {:interval => 1, :startup_msg => 'Watch start!', :shutdown_msg => 'Bye!'}
 
   def initialize(target='', params={}, &block)
-    @target = target
+    @target = File.expand_path(target)
     @@default_options.merge(params).each {|k,v| send("#{k.to_s}=", v) }
     yield self if block_given?
   end
