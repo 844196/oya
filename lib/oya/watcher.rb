@@ -13,7 +13,7 @@ class Oya::Watcher
   def initialize(target, params={}, &block)
     @@default_attributes.merge(params).each {|k,v| send("#{k.to_s}=", v) }
     @target = target
-    yield self if block_given?
+    instance_eval(&block) if block_given?
   end
 
   def add_handler(handler)
