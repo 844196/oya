@@ -1,12 +1,17 @@
 class Oya::Watcher
   include Observable
 
-  attr_accessor :target, :interval, :startup_msg, :shutdown_msg
-  @@default_options = {:interval => 1, :startup_msg => 'Watch start!', :shutdown_msg => 'Bye!'}
+  @@default_attributes = {
+    :target       => nil,
+    :interval     => 1,
+    :startup_msg  => 'Watch start!',
+    :shutdown_msg => 'Bye!'
+  }
+  @@default_attributes.each_key {|name| attr_accessor(name) }
 
   def initialize(target, params={}, &block)
+    @@default_attributes.merge(params).each {|k,v| send("#{k.to_s}=", v) }
     @target = target
-    @@default_options.merge(params).each {|k,v| send("#{k.to_s}=", v) }
     yield self if block_given?
   end
 
