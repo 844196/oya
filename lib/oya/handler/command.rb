@@ -4,7 +4,7 @@ class Oya::Handler::Command < Oya::Handler::Base
   end
 
   def execute(params={})
-    system(params[:command] || @command_str)
+    system(params[:command] || @command_str) unless params[:startup] || params[:shutdown]
   end
 
   alias :update :execute

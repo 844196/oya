@@ -21,11 +21,11 @@ class Oya::Watcher
 
   def start
     Signal.trap(:INT) do
-      notify_handlers(:message => shutdown_msg, :command => ':')
+      notify_handlers(:message => shutdown_msg, :shutdown => true)
       exit(1)
     end
 
-    notify_handlers(:message => startup_msg, :command => ':')
+    notify_handlers(:message => startup_msg, :startup => true)
     loop do
       sleep interval
       notify_handlers if target.changed?
