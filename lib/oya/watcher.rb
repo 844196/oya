@@ -28,14 +28,18 @@ class Oya::Watcher
     notify_handlers(:message => startup_msg, :command => ':')
     loop do
       sleep interval
-      notify_handlers(:changed_file => target) if target.changed?
+      notify_handlers if target.changed?
     end
+  end
+
+  def to_h
+    @@default_attributes.map {|key,_| [key, instance_variable_get("@#{key}")] }.to_h
   end
 
   private
 
   def notify_handlers(params={})
     changed
-    notify_observers(params.merge(:time => Time.now))
+    notify_observers(to_h.merge(params).merge(:time => Time.now))
   end
 end
