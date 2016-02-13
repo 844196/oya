@@ -17,9 +17,8 @@ require 'oya/handler/shell_notifier'
 require 'oya/handler/desktop_notifier'
 
 # syntax sugar
-module Oya::Watch; end
-class << Oya::Watch
-  def to(path, *params, &block)
+class << Oya
+  def watch(path, *params, &block)
     target = Oya::Target::File.new(path)
     Oya::Watcher.new(target, *params, &block)
   end
