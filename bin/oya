@@ -39,9 +39,17 @@ target_path, command_str = params.tap do |array|
   end
 end
 
-Oya::Watch.to(target_path) do |watcher|
+watch = Oya::Watch.to(target_path) do |watcher|
   watcher.interval = option[:interval]
   watcher.add_handler Oya::Handler::ShellNotifier.new('Target update!')
   watcher.add_handler Oya::Handler::DesktopNotifier.new('Target update!')
   watcher.add_handler Oya::Handler::Command.new(command_str)
 end
+
+watch_loop = Thread.fork do
+  Signal.trap(:INT) { watch.stop; exit(1) }
+  sleep
+end
+
+watch.start
+watch_loop.join

@@ -21,6 +21,6 @@ module Oya::Watch; end
 class << Oya::Watch
   def to(path, *params, &block)
     target = Oya::Target::File.new(path)
-    Oya::Watcher.new(target, *params, &block).start
+    Oya::Watcher.new(target, *params, &block)
   end
 end

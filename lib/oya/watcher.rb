@@ -4,6 +4,7 @@ class Oya::Watcher
   @@default_attributes = {
     :target       => nil,
     :interval     => 1,
+    :thread       => nil,
     :startup_msg  => 'Watch start!',
     :shutdown_msg => 'Bye!'
   }
@@ -20,16 +21,23 @@ class Oya::Watcher
   end
 
   def start
-    Signal.trap(:INT) do
-      notify_handlers(:message => shutdown_msg, :shutdown => true)
-      exit(1)
+    @thread = Thread.fork do
+      begin
+        notify_handlers(:message => startup_msg, :startup => true)
+        loop do
+          sleep interval
+          notify_handlers if target.changed?
+        end
+      ensure
+        notify_handlers(:message => shutdown_msg, :shutdown => true)
+      end
     end
+    @thread.run
+  end
 
-    notify_handlers(:message => startup_msg, :startup => true)
-    loop do
-      sleep interval
-      notify_handlers if target.changed?
-    end
+  def stop
+    @thread&.kill
+    @thread = nil
   end
 
   def to_h
