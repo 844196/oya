@@ -5,10 +5,22 @@ require 'observer'
 # handmade library
 module Oya; end
 require 'oya/version'
-require 'oya/handler'
+require 'oya/watcher'
 
-module Oya::Observers; end
-require 'oya/observers/observer'
-require 'oya/observers/command'
-require 'oya/observers/shell_notifier'
-require 'oya/observers/desktop_notifier'
+module Oya::Target; end
+require 'oya/target/file'
+
+module Oya::Handler; end
+require 'oya/handler/base'
+require 'oya/handler/command'
+require 'oya/handler/shell_notifier'
+require 'oya/handler/desktop_notifier'
+
+# syntax sugar
+module Oya::Watch; end
+class << Oya::Watch
+  def to(path, *params, &block)
+    target = Oya::Target::File.new(path)
+    Oya::Watcher.new(target, *params, &block).start
+  end
+end

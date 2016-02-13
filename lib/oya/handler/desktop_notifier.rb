@@ -1,4 +1,4 @@
-module Oya::Observers::DesktopNotifiers
+module Oya::Handler::DesktopNotifiers
   class Notifier
     def executable?
       env_paths.any? {|path| File.exist?(File.join(path, @command)) }
@@ -29,7 +29,7 @@ module Oya::Observers::DesktopNotifiers
   end
 end
 
-class Oya::Observers::DesktopNotifier < Oya::Observers::Observer
+class Oya::Handler::DesktopNotifier < Oya::Handler::Base
   def initialize(message)
     @message = message
   end
@@ -53,7 +53,7 @@ class Oya::Observers::DesktopNotifier < Oya::Observers::Observer
 
   def commands
     [
-      Oya::Observers::DesktopNotifiers::NotifySend.new
+      Oya::Handler::DesktopNotifiers::NotifySend.new
     ]
   end
 end

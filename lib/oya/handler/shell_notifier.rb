@@ -1,4 +1,4 @@
-class Oya::Observers::ShellNotifier < Oya::Observers::Observer
+class Oya::Handler::ShellNotifier < Oya::Handler::Base
   def initialize(message)
     @message = message
   end

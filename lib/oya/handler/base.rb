@@ -1,4 +1,4 @@
-class Oya::Observers::Observer
+class Oya::Handler::Base
   private
 
   def app_name
